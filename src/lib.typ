@@ -14,6 +14,7 @@
   table-label, table-continuation, nbsp-name,
 )
 #import "appendix.typ": appendix
+#import "diagram.typ": diagram, node, edge
 
 // Главный show-rule. Применяется так:
 //

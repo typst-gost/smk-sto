@@ -83,6 +83,28 @@ $ R = U / I $ <eq:ohm>
 
 #show: appendix
 
+= Схема зависимостей модулей
+
+В соответствии с рисунком @fig:deps представлен граф зависимостей
+модулей программного обеспечения, использованного при выполнении
+лабораторной работы.
+
+#figure(
+  diagram(
+    spacing: (1.5cm, 1.5cm),
+    node((0, 0), [contur2 (app)], fill: rgb("#dae8fc"), stroke: rgb("#6c8ebf")),
+    node((2, 0), [contur2_demos], fill: rgb("#d5e8d4"), stroke: rgb("#82b366")),
+    node((1, 1), [contur2_lib], fill: rgb("#ffe6cc"), stroke: rgb("#d79b00")),
+    node((3, 1), [tests (GTest)], fill: rgb("#f8cecc"), stroke: rgb("#b85450")),
+    edge((0, 0), (1, 1), "->", [link], label-pos: 0.5),
+    edge((2, 0), (1, 1), "->", [link], label-pos: 0.5),
+    edge((3, 1), (1, 1), "->", [test], label-pos: 0.5),
+  ),
+  caption: [Граф зависимостей модулей],
+) <fig:deps>
+
+
+
 = Дополнительные расчёты
 
 Подробные выкладки приведены в данном приложении.

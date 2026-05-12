@@ -182,6 +182,36 @@ The «где»-block is plain text — write it the way the standard prescribes
 (СТО 8.4.2): start with «где» on the abzac, comma-separate items, give
 each variable on a new line.
 
+### Block diagrams (boxes + arrows)
+
+`diagram`, `node`, `edge` are re-exported from `fletcher`. Wrap in
+`#figure(...)` to get a standard-compliant «Рисунок N – ...» caption:
+
+```typst
+#figure(
+  diagram(
+    node((0, 0), [contur2 (app)], fill: rgb("#dae8fc")),
+    node((2, 0), [contur2_demos],  fill: rgb("#d5e8d4")),
+    node((1, 1), [contur2_lib],    fill: rgb("#ffe6cc")),
+    node((3, 1), [tests (GTest)],  fill: rgb("#f8cecc")),
+    edge((0, 0), (1, 1), "->", [link]),
+    edge((2, 0), (1, 1), "->", [link]),
+    edge((3, 1), (1, 1), "->", [test]),
+  ),
+  caption: [Граф зависимостей модулей],
+) <fig:deps>
+```
+
+When the user pastes a drawio/mxGraph XML, translate it node-by-node:
+each `mxCell` with `vertex="1"` → `node((x, y), [label], fill: ...)`,
+each `mxCell` with `edge="1"` → `edge((x1, y1), (x2, y2), "->", [label])`.
+Map drawio's `fillColor`/`strokeColor` directly via `rgb("#...")`.
+
+Defaults set by the template: rounded rectangles, 0.5 pt black stroke,
+8 pt inset, 1.2 cm spacing, centered horizontally. Override any
+`fletcher.diagram` argument if needed (`spacing`, `node-stroke`,
+`edge-stroke`, etc.).
+
 ### Bibliography
 
 ```typst

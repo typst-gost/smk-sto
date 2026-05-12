@@ -70,6 +70,30 @@ $ R = U / I $ <eq:ohm>
 ...
 ```
 
+## Блок-схемы и графы
+
+Шаблон переэкспортирует `fletcher` — декларативные блок-схемы прямо в
+Typst (узлы и стрелки описываются кодом, без drawio/Visio):
+
+```typst
+#figure(
+  diagram(
+    node((0, 0), [contur2 (app)], fill: rgb("#dae8fc")),
+    node((2, 0), [contur2_demos],  fill: rgb("#d5e8d4")),
+    node((1, 1), [contur2_lib],    fill: rgb("#ffe6cc")),
+    node((3, 1), [tests (GTest)],  fill: rgb("#f8cecc")),
+    edge((0, 0), (1, 1), "->", [link]),
+    edge((2, 0), (1, 1), "->", [link]),
+    edge((3, 1), (1, 1), "->", [test]),
+  ),
+  caption: [Граф зависимостей модулей],
+) <fig:deps>
+```
+
+Узлы по умолчанию — скруглённые прямоугольники с тонкой чёрной обводкой
+(совместимо с СТО 8.5). Полный API: см. документацию пакета
+[fletcher](https://typst.app/universe/package/fletcher).
+
 ## Возможности
 
 - Автоматическая сборка титульного листа по Приложению А.
@@ -127,12 +151,81 @@ $ R = U / I $ <eq:ohm>
 
 ## Локальная разработка
 
-```
+### Быстрая проверка изменений
+
+```bash
 typst compile --root . template/example.typ
 ```
 
 Файл `template/example.typ` импортирует пакет из `src/lib.typ` напрямую
-(минуя `@preview`) — это удобно при разработке.
+(минуя `@preview`) — это удобно при разработке: правка → пересборка
+без копирования файлов.
+
+### Установка в локальный кэш `@preview`
+
+Чтобы протестировать пакет так, как его увидят пользователи после
+публикации в [Typst Universe](https://typst.app/universe) — кладём его
+в локальный кэш `@preview`. После этого `#import "@preview/smk-sto-004:0.1.0"`
+работает из **любого** проекта на этой машине.
+
+Путь к кэшу зависит от ОС:
+
+| ОС       | Путь                                                              |
+|----------|-------------------------------------------------------------------|
+| Windows  | `%APPDATA%\typst\packages\preview\smk-sto-004\0.1.0\`             |
+| Linux    | `~/.local/share/typst/packages/preview/smk-sto-004/0.1.0/`        |
+| macOS    | `~/Library/Caches/typst/packages/preview/smk-sto-004/0.1.0/`      |
+
+**Windows (PowerShell):**
+
+```powershell
+$dest = "$env:APPDATA\typst\packages\preview\smk-sto-004\0.1.0"
+Remove-Item -Recurse -Force $dest -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Force -Path $dest | Out-Null
+robocopy . $dest /E `
+    /XF "standard.pdf" "AGENTS.md" "example.typ" "example.pdf" ".gitignore" `
+    /XD ".git" ".github" "temp-render" ".claude" reference | Out-Null
+```
+
+**Linux / macOS:**
+
+```bash
+DEST="${XDG_DATA_HOME:-$HOME/.local/share}/typst/packages/preview/smk-sto-004/0.1.0"
+rm -rf "$DEST"
+mkdir -p "$DEST"
+rsync -a \
+    --exclude='.git' --exclude='.github' --exclude='reference' \
+    --exclude='standard.pdf' --exclude='standard.txt' \
+    --exclude='AGENTS.md' --exclude='temp-render' \
+    --exclude='template/example.typ' --exclude='template/example.pdf' \
+    ./ "$DEST/"
+```
+
+Список исключений в обеих командах согласован с полем `exclude` в
+[`typst.toml`](typst.toml).
+
+### Проверка из стороннего проекта
+
+После установки в кэш:
+
+```bash
+mkdir /tmp/check && cd /tmp/check
+echo '#import "@preview/smk-sto-004:0.1.0": *
+#show: lab-report.with(work-number: 1, title: "Проверка",
+  designation: (direction: "27.03.01", variant: "01"))
+= Раздел
+Текст.' > report.typ
+typst compile report.typ
+```
+
+Если PDF собрался — пакет корректно установлен и готов к использованию.
+Тем же путём (`typst init @preview/smk-sto-004 my-report`) можно
+создать новый проект из вшитого в пакет шаблона.
+
+### Обновление пакета в кэше
+
+После любых правок исходников просто повторите команду установки. Кэш
+полностью заменяется — никакой ручной чистки не нужно.
 
 ## Лицензия
 
