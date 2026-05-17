@@ -1,9 +1,11 @@
 # Compiled output
 *.pdf
-!standard.pdf
+!standard-labs.pdf
+!standard-practice.pdf
 
 # Extracted text
-standard.txt
+standard-labs.txt
+standard-practice.txt
 
 # Render scratch
 temp-render/
