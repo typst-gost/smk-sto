@@ -1,7 +1,8 @@
 # Compiled output
 *.pdf
-!standard-labs.pdf
+!standard-lab.pdf
 !standard-practice.pdf
+!standard-common.pdf
 
 # Extracted text
 standard-labs.txt
