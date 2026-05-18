@@ -20,7 +20,7 @@ Typst-шаблон для оформления учебной отчётност
 ## Быстрый старт — лабораторная работа
 
 ```typst
-#import "@preview/smk-sto:0.2.0": *
+#import "@preview/smk-sto:0.2.1": *
 
 #show: lab-report.with(
   institute: "Институт электроники и светотехники",
@@ -71,7 +71,7 @@ $ R = U / I $ <eq:ohm>
 ...
 
 #bibliography("references.bib",
-  style: "gost-r-705-2008-numeric",
+  style: "gost-r-7-0-100-2018-numeric.csl",
   title: [Список использованных источников])
 
 #show: appendix
@@ -82,7 +82,7 @@ $ R = U / I $ <eq:ohm>
 ## Быстрый старт — отчёт о практике
 
 ```typst
-#import "@preview/smk-sto:0.2.0": *
+#import "@preview/smk-sto:0.2.1": *
 
 #show: practice-report.with(
   institute: "Институт электроники и светотехники",
@@ -118,7 +118,7 @@ $ R = U / I $ <eq:ohm>
 ...
 
 #bibliography("references.bib",
-  style: "gost-r-705-2008-numeric",
+  style: "gost-r-7-0-100-2018-numeric.csl",
   title: [Список использованных источников])
 ```
 
@@ -379,21 +379,21 @@ typst compile --root . template/practice-example.typ    # практика
 
 Чтобы протестировать пакет так, как его увидят пользователи после
 публикации в [Typst Universe](https://typst.app/universe) — кладём его
-в локальный кэш `@preview`. После этого `#import "@preview/smk-sto:0.2.0"`
+в локальный кэш `@preview`. После этого `#import "@preview/smk-sto:0.2.1"`
 работает из **любого** проекта на этой машине.
 
 Путь к кэшу зависит от ОС:
 
 | ОС       | Путь                                                              |
 |----------|-------------------------------------------------------------------|
-| Windows  | `%APPDATA%\typst\packages\preview\smk-sto\0.2.0\`             |
-| Linux    | `~/.local/share/typst/packages/preview/smk-sto/0.2.0/`        |
-| macOS    | `~/Library/Caches/typst/packages/preview/smk-sto/0.2.0/`      |
+| Windows  | `%APPDATA%\typst\packages\preview\smk-sto\0.2.1\`             |
+| Linux    | `~/.local/share/typst/packages/preview/smk-sto/0.2.1/`        |
+| macOS    | `~/Library/Caches/typst/packages/preview/smk-sto/0.2.1/`      |
 
 **Windows (PowerShell):**
 
 ```powershell
-$dest = "$env:APPDATA\typst\packages\preview\smk-sto\0.2.0"
+$dest = "$env:APPDATA\typst\packages\preview\smk-sto\0.2.1"
 Remove-Item -Recurse -Force $dest -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $dest | Out-Null
 robocopy . $dest /E `
@@ -405,7 +405,7 @@ robocopy . $dest /E `
 **Linux / macOS:**
 
 ```bash
-DEST="${XDG_DATA_HOME:-$HOME/.local/share}/typst/packages/preview/smk-sto/0.2.0"
+DEST="${XDG_DATA_HOME:-$HOME/.local/share}/typst/packages/preview/smk-sto/0.2.1"
 rm -rf "$DEST"
 mkdir -p "$DEST"
 rsync -a \
@@ -427,7 +427,7 @@ rsync -a \
 
 ```bash
 mkdir /tmp/check && cd /tmp/check
-echo '#import "@preview/smk-sto:0.2.0": *
+echo '#import "@preview/smk-sto:0.2.1": *
 #show: lab-report.with(work-number: 1, title: "Проверка",
   designation: (direction: "27.03.01", variant: "01"))
 = Раздел

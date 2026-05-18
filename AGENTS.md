@@ -30,7 +30,7 @@ interchangeable.
 A minimal `report.typ`:
 
 ```typst
-#import "@preview/smk-sto:0.2.0": *
+#import "@preview/smk-sto:0.2.1": *
 
 #show: lab-report.with(
   institute: "Институт электроники и светотехники",
@@ -56,7 +56,7 @@ A minimal `report.typ`:
 ## How to start a practice report (СТО 014–2025)
 
 ```typst
-#import "@preview/smk-sto:0.2.0": *
+#import "@preview/smk-sto:0.2.1": *
 
 #show: practice-report.with(
   institute: "Институт электроники и светотехники",
@@ -110,7 +110,7 @@ Only override these if the user explicitly asks.
 
 ## API surface
 
-Imported with `#import "@preview/smk-sto:0.2.0": *`:
+Imported with `#import "@preview/smk-sto:0.2.1": *`:
 
 **Lab reports (СТО 004–2020):**
 
@@ -327,10 +327,19 @@ Defaults set by the template: rounded rectangles, 0.5 pt black stroke,
 ```typst
 #bibliography(
   "references.bib",
-  style: "gost-r-705-2008-numeric",
+  style: "gost-r-7-0-100-2018-numeric.csl",
   title: [Список использованных источников],
 )
 ```
+
+The CSL file `gost-r-7-0-100-2018-numeric.csl` is bundled with the
+template (in the same directory as `lab-main.typ` / `practice-main.typ`)
+and implements **ГОСТ Р 7.0.100–2018** «Библиографическая запись.
+Библиографическое описание. Общие требования и правила составления» —
+действующий российский стандарт оформления списка использованных
+источников (он же согласуется со вспомогательными ГОСТ 7.11,
+ГОСТ Р 7.0.12 и ГОСТ Р 7.0.80). Не заменяйте на устаревший
+`gost-r-705-2008-numeric` без явной просьбы пользователя.
 
 (The bibliography heading is unnumbered by Typst, so it's auto-styled
 as a structural heading — no `<s>` needed.)
