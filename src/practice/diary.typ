@@ -1,7 +1,7 @@
 // Дневник практики — Приложение Г к СМК СТО 014–2025.
 
 #import "../constants.typ": default-margin
-#import "form-helpers.typ": field-line, label-for, sign-line, student-word, underlined-box
+#import "form-helpers.typ": field-line, kind-line, label-for, sign-line, student-word, underlined-box
 
 #let practice-report-diary(
   kind: none,
@@ -68,22 +68,7 @@
 
   // «по [учебной] практике» — единый паттерн с титульным листом и
   // заданием; `kind` передаётся в нужном падеже (учебной / производственной).
-  if kind != none {
-    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
-      по #kind практике
-    ])
-  } else {
-    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
-      #grid(
-        columns: (auto, 1fr, auto),
-        column-gutter: 0.5em,
-        row-gutter: 3pt,
-        align: (right + bottom, center + bottom, left + bottom),
-        [по], underlined-box(none), [практике],
-        [], label-for(kind, [вид практики]), [],
-      )
-    ])
-  }
+  kind-line(prefix: [по], kind: kind, noun: [практике], label: [вид практики])
 
   align(center, block(width: 50%, spacing: 0.4em)[
     #grid(

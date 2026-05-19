@@ -2,7 +2,7 @@
 // Приложение Д к СМК СТО 014–2025.
 
 #import "../constants.typ": default-margin
-#import "form-helpers.typ": small-label, underlined-box
+#import "form-helpers.typ": kind-line, small-label, underlined-box
 
 // Полный список вопросов и допустимых ответов фиксирован стандартом —
 // здесь определяются их значения по умолчанию. Пользователь передаёт
@@ -86,22 +86,7 @@
     #block(spacing: 0.65em)[#upper[Анкета]]
   ]
 
-  if kind != none {
-    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
-      #kind практика
-    ])
-  } else {
-    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
-      #grid(
-        columns: (1fr, auto),
-        column-gutter: 0.5em,
-        row-gutter: 3pt,
-        align: (center + bottom, left + bottom),
-        underlined-box(none), [практика],
-        small-label[Вид практики], [],
-      )
-    ])
-  }
+  kind-line(kind: kind, noun: [практика], label: [Вид практики])
 
   align(center, block(width: 50%, spacing: 0.4em)[
     #grid(

@@ -179,6 +179,39 @@
   ]
 }
 
+// Строка «по/на <вид> практике» с нормальным текстом при заполнении
+// и подчеркиванием + подписью при пустом значении.
+#let kind-line(prefix: none, kind: none, noun: none, label: none, width: 60%) = {
+  if kind != none {
+    let line = if prefix != none { [#prefix #kind #noun] } else { [#kind #noun] }
+    align(center, block(width: width, breakable: false, spacing: 0.4em)[
+      #line
+    ])
+  } else {
+    align(center, block(width: width, breakable: false, spacing: 0.4em)[
+      #if prefix != none {
+        grid(
+          columns: (auto, 1fr, auto),
+          column-gutter: 0.5em,
+          row-gutter: 3pt,
+          align: (right + bottom, center + bottom, left + bottom),
+          [#prefix], underlined-box(none), [#noun],
+          [], label-for(kind, label), [],
+        )
+      } else {
+        grid(
+          columns: (1fr, auto),
+          column-gutter: 0.5em,
+          row-gutter: 3pt,
+          align: (center + bottom, left + bottom),
+          underlined-box(none), [#noun],
+          label-for(kind, label), [],
+        )
+      }
+    ])
+  }
+}
+
 
 // Многострочное поле для развёрнутого текстового ответа.
 // `lines: N` рисует N горизонтальных линий-«линеек» под значением,

@@ -1,7 +1,7 @@
 // Задание на практику — Приложение Б к СМК СТО 014–2025.
 
 #import "../constants.typ": default-margin
-#import "form-helpers.typ": field-line, label-for, sign-line, small-label, student-word, underlined-box
+#import "form-helpers.typ": field-line, kind-line, label-for, sign-line, student-word, underlined-box
 
 #let practice-report-task(
   kind: none, // строка: «учебной» / «производственной»
@@ -91,22 +91,7 @@
   v(0.4em)
 
   // «на [учебную] практику» с подписью «вид практики».
-  if kind != none {
-    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
-      на #kind практику
-    ])
-  } else {
-    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
-      #grid(
-        columns: (auto, 1fr, auto),
-        column-gutter: 0.5em,
-        row-gutter: 3pt,
-        align: (right + bottom, center + bottom, left + bottom),
-        [на], underlined-box(none), [практику],
-        [], label-for(kind, [вид практики]), [],
-      )
-    ])
-  }
+  kind-line(prefix: [на], kind: kind, noun: [практику], label: [вид практики])
 
   // «[ознакомительная]» с подписью «Тип практики в соответствии с ОПОП ВО».
   align(center, block(width: 50%, spacing: 0.4em)[
@@ -223,14 +208,5 @@
 
   // Поле «к исполнению принял» — подпись обучающегося.
   v(0.3em)
-  block(width: 100%, breakable: false, spacing: 0.55em)[
-    #grid(
-      columns: (auto, 1fr, auto),
-      column-gutter: 0.8em,
-      row-gutter: 3pt,
-      align: (left + bottom, center + bottom, left + bottom),
-      [Задание к исполнению принял], underlined-box(none), author-rec.at("name", default: none),
-      [], small-label[подпись, дата], [],
-    )
-  ]
+  sign-line([Задание к исполнению принял], author-rec.at("name", default: none))
 }

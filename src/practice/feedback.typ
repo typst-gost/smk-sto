@@ -84,7 +84,7 @@
       column-gutter: 0.5em,
       row-gutter: 3pt,
       align: (left + bottom, center + bottom, left + bottom),
-      [Руководителя], underlined-box(if practice-name != none { [#practice-name] } else { none }), [практики от],
+      [Руководителя], underlined-box(if practice-name != none { [#practice-name] } else { none }), [ от],
       [], label-for(practice-name, [вид, тип практики в соответствии с ОПОП ВО]), [],
     )
   ]

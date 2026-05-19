@@ -3,7 +3,7 @@
 
 #import "../constants.typ": default-city, default-ministry, default-okpo, default-organization
 #import "designation.typ": practice-report-designation
-#import "form-helpers.typ": field-line, label-for, sign-line, small-label, student-word, underlined-box
+#import "form-helpers.typ": field-line, kind-line, label-for, sign-line, small-label, student-word, underlined-box
 
 #let practice-report-title-page(
   ministry: default-ministry,
@@ -169,22 +169,7 @@
 
   // «по [учебной] практике» с подписью «вид практики».
   // Блок центрируется и сужен — линия не на всю ширину страницы.
-  if kind != none {
-    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
-      по #kind практике
-    ])
-  } else {
-    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
-      #grid(
-        columns: (auto, 1fr, auto),
-        column-gutter: 0.5em,
-        row-gutter: 3pt,
-        align: (right + bottom, center + bottom, left + bottom),
-        [по], underlined-box(none), [практике],
-        [], label-for(kind, [вид практики]), [],
-      )
-    ])
-  }
+  kind-line(prefix: [по], kind: kind, noun: [практике], label: [вид практики])
 
   // «[ознакомительная]» с подписью «Тип практики в соответствии с ОПОП ВО».
   align(center, block(width: 50%, spacing: 0.4em)[
