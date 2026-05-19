@@ -6,7 +6,7 @@
 //
 // Подключение:
 //
-//   #import "@preview/smk-sto:0.3.0": *
+//   #import "@preview/smk-sto:0.3.1": *
 //
 //   #show: lab-report.with(...)       // для лабораторной работы
 //   // или

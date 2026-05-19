@@ -32,7 +32,7 @@ interchangeable.
 A minimal `report.typ`:
 
 ```typst
-#import "@preview/smk-sto:0.3.0": *
+#import "@preview/smk-sto:0.3.1": *
 
 #show: lab-report.with(
   institute: "Институт электроники и светотехники",
@@ -58,7 +58,7 @@ A minimal `report.typ`:
 ## How to start a practice report (СТО 014–2025)
 
 ```typst
-#import "@preview/smk-sto:0.3.0": *
+#import "@preview/smk-sto:0.3.1": *
 
 #show: practice-report.with(
   institute: "Институт электроники и светотехники",
@@ -112,7 +112,7 @@ Only override these if the user explicitly asks.
 
 ## API surface
 
-Imported with `#import "@preview/smk-sto:0.3.0": *`:
+Imported with `#import "@preview/smk-sto:0.3.1": *`:
 
 **Lab reports (СТО 004–2020):**
 
