@@ -1,12 +1,15 @@
 // Дневник практики — Приложение Г к СМК СТО 014–2025.
 
 #import "../constants.typ": default-margin
-#import "form-helpers.typ": small-label, underlined-box, field-line, sign-line
+#import "form-helpers.typ": field-line, label-for, sign-line, student-word, underlined-box
 
 #let practice-report-diary(
   kind: none,
   practice-type: none,
-  student-prefix: "Обучающегося(ейся)",
+  // Гендер обучающегося — влияет на словоформу обращения.
+  gender: none,
+  // Обращение к обучающемуся; по умолчанию — словоформа по гендеру.
+  student-prefix: auto,
   author: none,
   direction: none,
   profile: none,
@@ -27,7 +30,8 @@
     leading: 0.55em,
     spacing: 0.5em,
   )
-  set text(size: 14pt)
+  // Бланк формы — переносов в полях нет.
+  set text(size: 14pt, hyphenate: false)
 
   let author-rec = if type(author) == str {
     (name: author, course: none, group: none)
@@ -44,11 +48,17 @@
   } else if type(direction) == dictionary {
     let code = direction.at("code", default: none)
     let name = direction.at("name", default: none)
-    if code != none and name != none { [#code #name] }
-    else if code != none { [#code] }
-    else if name != none { [#name] }
-    else { none }
+    if code != none and name != none { [#code #name] } else if code != none { [#code] } else if name != none {
+      [#name]
+    } else { none }
   } else { none }
+
+  // Словоформа обращения к обучающемуся — по гендеру, если явно не задано.
+  let prefix = if student-prefix == auto {
+    student-word(case: "genitive", gender: gender)
+  } else {
+    student-prefix
+  }
 
   // --- Шапка формы ----------------------------------------------------
 
@@ -58,25 +68,29 @@
 
   // «по [учебной] практике» — единый паттерн с титульным листом и
   // заданием; `kind` передаётся в нужном падеже (учебной / производственной).
-  align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
-    #grid(
-      columns: (auto, 1fr, auto),
-      column-gutter: 0.5em,
-      row-gutter: 3pt,
-      align: (right + bottom, center + bottom, left + bottom),
-      [по],
-      underlined-box(if kind != none { [#kind] } else { none }),
-      [практике],
-      [], small-label[вид практики], [],
-    )
-  ])
+  if kind != none {
+    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
+      по #kind практике
+    ])
+  } else {
+    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
+      #grid(
+        columns: (auto, 1fr, auto),
+        column-gutter: 0.5em,
+        row-gutter: 3pt,
+        align: (right + bottom, center + bottom, left + bottom),
+        [по], underlined-box(none), [практике],
+        [], label-for(kind, [вид практики]), [],
+      )
+    ])
+  }
 
   align(center, block(width: 50%, spacing: 0.4em)[
     #grid(
       columns: 1fr,
       row-gutter: 3pt,
       underlined-box(if practice-type != none { [#practice-type] } else { none }),
-      small-label[Тип практики в соответствии с ОПОП ВО],
+      label-for(practice-type, [Тип практики в соответствии с ОПОП ВО]),
     )
   ])
 
@@ -85,7 +99,7 @@
   // --- Сведения об обучающемся ----------------------------------------
 
   field-line(
-    [#student-prefix],
+    [#prefix],
     author-rec.at("name", default: none),
     label: [Фамилия Имя Отчество],
   )
@@ -110,7 +124,8 @@
         width: 3cm,
       ),
       [группы],
-      [], [],
+      [],
+      [],
     )
   ]
 
@@ -150,16 +165,18 @@
     header(none)[Дата],
     header(none)[Содержание / Результаты работы],
     header(none)[Замечания руководителя(ей) практики],
-    ..entries.map(entry => {
-      let date = entry.at(0, default: "")
-      let content = entry.at(1, default: "")
-      let note = entry.at(2, default: "")
-      (
-        table.cell(align: center + horizon)[#date],
-        table.cell(align: left + horizon)[#content],
-        table.cell(align: left + horizon)[#note],
-      )
-    }).flatten(),
+    ..entries
+      .map(entry => {
+        let date = entry.at(0, default: "")
+        let content = entry.at(1, default: "")
+        let note = entry.at(2, default: "")
+        (
+          table.cell(align: center + horizon)[#date],
+          table.cell(align: left + horizon)[#content],
+          table.cell(align: left + horizon)[#note],
+        )
+      })
+      .flatten(),
   )
 
   v(0.6em)

@@ -1,36 +1,47 @@
 // Титульный лист отчёта о практике.
 // Форма — Приложение В к СМК СТО 014–2025.
 
-#import "../constants.typ": (
-  default-city, default-ministry, default-organization, default-okpo,
-)
+#import "../constants.typ": default-city, default-ministry, default-okpo, default-organization
 #import "designation.typ": practice-report-designation
-#import "form-helpers.typ": small-label, underlined-box, field-line, sign-line
+#import "form-helpers.typ": field-line, label-for, sign-line, small-label, student-word, underlined-box
 
 #let practice-report-title-page(
   ministry: default-ministry,
   organization: default-organization,
   institute: none,
   department: none,
-  kind: none,            // строка: «учебной» / «производственной» (в форме «по __ практике»)
-  practice-type: none,   // строка: тип в соответствии с ОПОП ВО
-  // Обращение к обучающемуся: для стандартной формы — «Обучающийся(аяся)»;
-  // для распространённого варианта факультета — «студента» / «студентки» и т. п.
-  student-prefix: "Обучающийся(аяся)",
-  author: none,          // dict (name, course, group) или строка-имя
-  direction: none,       // dict (code, name) или строка целиком
+  kind: none, // строка: «учебной» / «производственной» (в форме «по __ практике»)
+  practice-type: none, // строка: тип в соответствии с ОПОП ВО
+  // Гендер обучающегося — влияет на словоформу `student-prefix` и
+  // другие гендерно-зависимые тексты («Обучающийся» / «Обучающаяся»).
+  // Допустимы значения: `"male"`, `"female"`, `none` (двойная форма
+  // «Обучающийся(аяся)»). См. `student-word` в form-helpers.typ.
+  gender: none,
+  // Обращение к обучающемуся: для стандартной формы — словоформа по
+  // гендеру (`student-word(case: "nominative", gender: gender)`).
+  // Можно переопределить строкой («студента» / «студентки» и т. п.).
+  student-prefix: auto,
+  author: none, // dict (name, course, group) или строка-имя
+  direction: none, // dict (code, name) или строка целиком
   profile: none,
   location: none,
-  period: none,          // dict (start, end) или строка
+  period: none, // dict (start, end) или строка
   designation: none,
-  supervisor-org: none,  // dict (name, position, org)
-  supervisor-uni: none,  // dict (name, position, org)
-  defense: none,         // dict (mark, date) — обычно остаются пустыми
+  supervisor-org: none, // dict (name, position, org)
+  supervisor-uni: none, // dict (name, position, org)
+  defense: none, // dict (mark, date) — обычно остаются пустыми
   city: default-city,
   year: auto,
 ) = {
   if year == auto {
     year = int(datetime.today().display("[year]"))
+  }
+
+  // Словоформа обращения к обучающемуся — по гендеру, если явно не задано.
+  let prefix = if student-prefix == auto {
+    student-word(case: "nominative", gender: gender)
+  } else {
+    student-prefix
   }
 
   let org = if type(organization) == str {
@@ -74,10 +85,7 @@
   } else if type(period) == dictionary {
     let s = period.at("start", default: none)
     let e = period.at("end", default: none)
-    if s != none and e != none { [#s – #e] }
-    else if s != none { [#s] }
-    else if e != none { [#e] }
-    else { none }
+    if s != none and e != none { [#s – #e] } else if s != none { [#s] } else if e != none { [#e] } else { none }
   } else if period == none {
     none
   } else {
@@ -125,7 +133,8 @@
     leading: 0.55em,
     spacing: 0.5em,
   )
-  set text(size: 14pt)
+  // На титульном листе переносы не допускаются (СТО 006–2025 п. 7.1.3).
+  set text(size: 14pt, hyphenate: false)
   set align(center)
 
   // Шапка университета.
@@ -160,18 +169,22 @@
 
   // «по [учебной] практике» с подписью «вид практики».
   // Блок центрируется и сужен — линия не на всю ширину страницы.
-  align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
-    #grid(
-      columns: (auto, 1fr, auto),
-      column-gutter: 0.5em,
-      row-gutter: 3pt,
-      align: (right + bottom, center + bottom, left + bottom),
-      [по],
-      underlined-box(if kind != none { [#kind] } else { none }),
-      [практике],
-      [], small-label[вид практики], [],
-    )
-  ])
+  if kind != none {
+    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
+      по #kind практике
+    ])
+  } else {
+    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
+      #grid(
+        columns: (auto, 1fr, auto),
+        column-gutter: 0.5em,
+        row-gutter: 3pt,
+        align: (right + bottom, center + bottom, left + bottom),
+        [по], underlined-box(none), [практике],
+        [], label-for(kind, [вид практики]), [],
+      )
+    ])
+  }
 
   // «[ознакомительная]» с подписью «Тип практики в соответствии с ОПОП ВО».
   align(center, block(width: 50%, spacing: 0.4em)[
@@ -179,7 +192,7 @@
       columns: 1fr,
       row-gutter: 3pt,
       underlined-box(if practice-type != none { [#practice-type] } else { none }),
-      small-label[Тип практики в соответствии с ОПОП ВО],
+      label-for(practice-type, [Тип практики в соответствии с ОПОП ВО]),
     )
   ])
 
@@ -193,7 +206,7 @@
       if type(course) == int { str(course) } else { course }
     } else { "___" }
     let group-str = if group != none { group } else { "___" }
-    block(spacing: 0.65em)[#student-prefix #course-str курса #group-str группы]
+    block(spacing: 0.65em)[#prefix #course-str курса #group-str группы]
   }
 
   v(0.4em)
@@ -252,8 +265,10 @@
     sup-uni.at("name", default: none),
   )
 
-  // Поле «Отчёт защищён … дата + Оценка …» — обычно остаётся пустым
-  // на печати, заполняется рукописно после защиты (СТО 014–2025 п. 5.5).
+  // Поле «Отчёт защищён … дата + Оценка …» — заполняется рукописно после
+  // защиты (СТО 014–2025 п. 5.5). Подчёркивание оставляем всегда, даже
+  // если значение уже впечатано в шаблон, — это поле визуально считается
+  // рукописным бланком.
   v(0.4em)
   let mark = defense-rec.at("mark", default: none)
   let date = defense-rec.at("date", default: none)
@@ -264,9 +279,16 @@
       row-gutter: 3pt,
       align: (left + bottom, center + bottom, left + bottom, center + bottom),
       [Отчёт защищён],
-      underlined-box(if date != none { [#date] } else { none }),
+      underlined-box(
+        if date != none { [#date] } else { none },
+        force-underline: true,
+      ),
       [Оценка],
-      underlined-box(if mark != none { [#mark] } else { none }),
+      underlined-box(
+        if mark != none { [#mark] } else { none },
+        force-underline: true,
+      ),
+
       [], small-label[дата], [], [],
     )
   ]

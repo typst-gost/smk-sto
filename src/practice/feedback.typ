@@ -2,25 +2,27 @@
 // Приложение Ж к СМК СТО 014–2025.
 
 #import "../constants.typ": default-margin
-#import "form-helpers.typ": small-label, underlined-box, field-line, sign-line
+#import "form-helpers.typ": field-line, label-for, sign-line, student-word, underlined-box
 
 #let practice-report-feedback(
   // Сведения о виде/типе практики — кратко, без отдельной строки шапки;
   // отображаются после слова «Руководителя ... практики от ...».
-  practice-name: none,      // строка: «вид, тип практики в соответствии с ОПОП ВО»
-  host-org: none,           // полное наименование профильной организации
-  author: none,             // dict (name) или строка
-  direction: none,          // dict (code, name) или строка
+  practice-name: none, // строка: «вид, тип практики в соответствии с ОПОП ВО»
+  host-org: none, // полное наименование профильной организации
+  // Гендер обучающегося — влияет на словоформу «Обучающийся».
+  gender: none,
+  author: none, // dict (name) или строка
+  direction: none, // dict (code, name) или строка
   profile: none,
-  period: none,             // dict (start, end) или строка
+  period: none, // dict (start, end) или строка
   // Шесть содержательных пунктов отзыва (значения опциональны).
-  self-reliance: none,      // 1
-  analysis: none,           // 2
-  results: none,            // 3
-  attitude: none,           // 4
-  professional: none,       // 5
-  personal: none,           // 6
-  supervisor-org: none,     // подпись руководителя от профильной
+  self-reliance: none, // 1
+  analysis: none, // 2
+  results: none, // 3
+  attitude: none, // 4
+  professional: none, // 5
+  personal: none, // 6
+  supervisor-org: none, // подпись руководителя от профильной
   margin: default-margin,
 ) = {
   pagebreak(weak: true)
@@ -32,14 +34,15 @@
     leading: 0.55em,
     spacing: 0.5em,
   )
-  set text(size: 14pt)
+  // Бланк формы — переносов в полях нет.
+  set text(size: 14pt, hyphenate: false)
 
   let author-rec = if type(author) == str {
-    (name: author,)
+    (name: author)
   } else if type(author) == dictionary {
     author
   } else if author == none {
-    (name: none,)
+    (name: none)
   } else {
     panic("Некорректный тип поля author")
   }
@@ -49,10 +52,9 @@
   } else if type(direction) == dictionary {
     let code = direction.at("code", default: none)
     let name = direction.at("name", default: none)
-    if code != none and name != none { [#code #name] }
-    else if code != none { [#code] }
-    else if name != none { [#name] }
-    else { none }
+    if code != none and name != none { [#code #name] } else if code != none { [#code] } else if name != none {
+      [#name]
+    } else { none }
   } else { none }
 
   let period-str = if type(period) == str {
@@ -60,11 +62,11 @@
   } else if type(period) == dictionary {
     let s = period.at("start", default: none)
     let e = period.at("end", default: none)
-    if s != none and e != none { [#s – #e] }
-    else if s != none { [#s] }
-    else if e != none { [#e] }
-    else { none }
+    if s != none and e != none { [#s – #e] } else if s != none { [#s] } else if e != none { [#e] } else { none }
   } else { none }
+
+  // Словоформа обращения к обучающемуся — по гендеру.
+  let prefix = student-word(case: "nominative", gender: gender)
 
   // --- Шапка формы ----------------------------------------------------
 
@@ -82,10 +84,8 @@
       column-gutter: 0.5em,
       row-gutter: 3pt,
       align: (left + bottom, center + bottom, left + bottom),
-      [Руководителя],
-      underlined-box(if practice-name != none { [#practice-name] } else { none }),
-      [практики от],
-      [], small-label[вид, тип практики в соответствии с ОПОП ВО], [],
+      [Руководителя], underlined-box(if practice-name != none { [#practice-name] } else { none }), [практики от],
+      [], label-for(practice-name, [вид, тип практики в соответствии с ОПОП ВО]), [],
     )
   ]
 
@@ -95,14 +95,14 @@
       columns: 1fr,
       row-gutter: 3pt,
       underlined-box(if host-org != none { [#host-org] } else { none }),
-      small-label[Полное наименование профильной организации],
+      label-for(host-org, [Полное наименование профильной организации]),
     )
   ]
 
   // --- Сведения об обучающемся ----------------------------------------
 
   field-line(
-    [Обучающийся(аяся)],
+    [#prefix],
     author-rec.at("name", default: none),
     label: [Фамилия Имя Отчество],
   )

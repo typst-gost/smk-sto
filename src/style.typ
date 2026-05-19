@@ -32,11 +32,13 @@
     number-align: center + bottom,
   )
 
+  // Переносы в основном тексте разрешены (СТО 014–2025 п. 5.7,
+  // СТО 006–2025 п. 8.1.2) — отключаем только в заголовках ниже.
   set text(
     font: font,
     size: text-size,
     lang: "ru",
-    hyphenate: false,
+    hyphenate: true,
   )
 
   set par(
@@ -67,7 +69,8 @@
   // и т. п.): такой `= Заголовок <s>` рендерится без номера, по центру,
   // заглавными буквами, и не увеличивает счётчик глав.
   show <s>: set heading(numbering: none)
-  show heading: set text(size: text-size, weight: "bold")
+  // В заголовках переносы не допускаются (СТО 004 8.1.5, СТО 006 8.3.3).
+  show heading: set text(size: text-size, weight: "bold", hyphenate: false)
   show heading: it => {
     set par(first-line-indent: 0pt, justify: false)
     let body = it.body
@@ -98,19 +101,21 @@
   }
 
   // Содержание: номер раздела + название с заполнителем-точками + страница.
-  // Приложения выводятся как «Приложение А Название».
+  // Приложения выводятся как «ПРИЛОЖЕНИЕ А Название».
+  // По СТО 006–2025 п. 7.4.3 подразделы сдвигаются на 0,5 см относительно
+  // обозначения разделов, пункты — на 1 см.
   show outline: set par(first-line-indent: 0pt)
-  set outline(indent: indent, depth: 3)
+  set outline(indent: 0.5cm, depth: 3)
   show outline.entry: it => context {
     let el = it.element
     let is-heading-l1 = el != none and el.func() == heading and el.level == 1
-    let is-app = is-heading-l1 and el.supplement == [Приложение]
+    let is-app = is-heading-l1 and el.supplement == [ПРИЛОЖЕНИЕ]
     let is-structural = is-heading-l1 and el.numbering == none
     let fill = box(width: 1fr, repeat[.#h(2pt)])
     if is-app {
       let letter = numbering(el.numbering, ..counter(heading).at(el.location()))
       link(el.location(), it.indented(
-        [Приложение #letter],
+        [ПРИЛОЖЕНИЕ #letter],
         el.body + h(0.5em) + fill + sym.space + it.page(),
       ))
     } else if is-structural {
@@ -161,8 +166,12 @@
     table-label(num: num, caption: it.body)
   }
 
-  // Кавычки — ёлочки.
-  set smartquote(quotes: (single: "‹›", double: "«»"))
+  // Кавычки по СТО 006–2025 п. 8.1.8: внешние — «ёлочки», внутренние —
+  // „лапки" (немецкого начертания: нижняя „ + верхняя “).
+  set smartquote(quotes: (single: "„“", double: "«»"))
+
+  // Сноски — Times New Roman 12 пт (СТО 006–2025 п. 8.10.7).
+  show footnote.entry: set text(size: small-size)
 
   // Ссылки внутри документа.
   set ref(supplement: none)

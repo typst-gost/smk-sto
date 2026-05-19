@@ -75,7 +75,9 @@
     leading: 0.65em,
     spacing: 0.65em,
   )
-  set text(size: 14pt)
+  // На титульном листе переносы не допускаются (СТО 006–2025 п. 7.1.3,
+  // СТО 004–2020 п. 8.1.1).
+  set text(size: 14pt, hyphenate: false)
   set align(center)
 
   // Шапка университета

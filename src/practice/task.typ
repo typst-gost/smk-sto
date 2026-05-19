@@ -1,26 +1,28 @@
 // Задание на практику — Приложение Б к СМК СТО 014–2025.
 
 #import "../constants.typ": default-margin
-#import "form-helpers.typ": small-label, underlined-box, field-line, sign-line
+#import "form-helpers.typ": field-line, label-for, sign-line, small-label, student-word, underlined-box
 
 #let practice-report-task(
-  kind: none,                  // строка: «учебной» / «производственной»
-  practice-type: none,         // строка: тип в соответствии с ОПОП ВО
-  // Обращение к обучающемуся; стандарт использует «Обучающемуся (ейся)».
-  student-prefix: "Обучающемуся (ейся)",
-  author: none,                // dict (name, course, group) или строка-имя
-  direction: none,             // dict (code, name) или строка
-  profile: none,               // строка («Направленность (профиль)»)
-  location: none,              // строка
-  period: none,                // dict (start, end) или строка
+  kind: none, // строка: «учебной» / «производственной»
+  practice-type: none, // строка: тип в соответствии с ОПОП ВО
+  // Гендер обучающегося — влияет на словоформу обращения.
+  gender: none,
+  // Обращение к обучающемуся; по умолчанию — словоформа по гендеру.
+  student-prefix: auto,
+  author: none, // dict (name, course, group) или строка-имя
+  direction: none, // dict (code, name) или строка
+  profile: none, // строка («Направленность (профиль)»)
+  location: none, // строка
+  period: none, // dict (start, end) или строка
   // Срок представления отчёта на защиту и отзыва.
   submission-date: none,
   // Содержательная часть задания.
-  goals: none,                 // 1 Цели и задачи практики
-  competencies: none,          // 2 Компетенции обучающегося
-  tasks: none,                 // 3 Задание на практику (строка или список)
-  supervisor-org: none,        // руководитель от профильной организации
-  supervisor-uni: none,        // руководитель от Университета
+  goals: none, // 1 Цели и задачи практики
+  competencies: none, // 2 Компетенции обучающегося
+  tasks: none, // 3 Задание на практику (строка или список)
+  supervisor-org: none, // руководитель от профильной организации
+  supervisor-uni: none, // руководитель от Университета
   margin: default-margin,
 ) = {
   // Каждое приложение — отдельный документ со своей нумерацией страниц;
@@ -34,7 +36,8 @@
     leading: 0.55em,
     spacing: 0.5em,
   )
-  set text(size: 14pt)
+  // Бланк формы — переносов в полях нет.
+  set text(size: 14pt, hyphenate: false)
 
   // Подготовка значений.
   let author-rec = if type(author) == str {
@@ -52,10 +55,9 @@
   } else if type(direction) == dictionary {
     let code = direction.at("code", default: none)
     let name = direction.at("name", default: none)
-    if code != none and name != none { [#code #name] }
-    else if code != none { [#code] }
-    else if name != none { [#name] }
-    else { none }
+    if code != none and name != none { [#code #name] } else if code != none { [#code] } else if name != none {
+      [#name]
+    } else { none }
   } else { none }
 
   let period-str = if type(period) == str {
@@ -63,10 +65,7 @@
   } else if type(period) == dictionary {
     let s = period.at("start", default: none)
     let e = period.at("end", default: none)
-    if s != none and e != none { [#s – #e] }
-    else if s != none { [#s] }
-    else if e != none { [#e] }
-    else { none }
+    if s != none and e != none { [#s – #e] } else if s != none { [#s] } else if e != none { [#e] } else { none }
   } else { none }
 
   let tasks-content = if tasks == none {
@@ -75,6 +74,13 @@
     // Список задач — рендерим как нумерованный enum.
     enum(..tasks.map(t => [#t]))
   } else { tasks }
+
+  // Словоформа обращения к обучающемуся — по гендеру, если явно не задано.
+  let prefix = if student-prefix == auto {
+    student-word(case: "dative", gender: gender)
+  } else {
+    student-prefix
+  }
 
   // --- Шапка формы ----------------------------------------------------
 
@@ -85,18 +91,22 @@
   v(0.4em)
 
   // «на [учебную] практику» с подписью «вид практики».
-  align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
-    #grid(
-      columns: (auto, 1fr, auto),
-      column-gutter: 0.5em,
-      row-gutter: 3pt,
-      align: (right + bottom, center + bottom, left + bottom),
-      [на],
-      underlined-box(if kind != none { [#kind] } else { none }),
-      [практику],
-      [], small-label[вид практики], [],
-    )
-  ])
+  if kind != none {
+    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
+      на #kind практику
+    ])
+  } else {
+    align(center, block(width: 60%, breakable: false, spacing: 0.4em)[
+      #grid(
+        columns: (auto, 1fr, auto),
+        column-gutter: 0.5em,
+        row-gutter: 3pt,
+        align: (right + bottom, center + bottom, left + bottom),
+        [на], underlined-box(none), [практику],
+        [], label-for(kind, [вид практики]), [],
+      )
+    ])
+  }
 
   // «[ознакомительная]» с подписью «Тип практики в соответствии с ОПОП ВО».
   align(center, block(width: 50%, spacing: 0.4em)[
@@ -104,7 +114,7 @@
       columns: 1fr,
       row-gutter: 3pt,
       underlined-box(if practice-type != none { [#practice-type] } else { none }),
-      small-label[Тип практики в соответствии с ОПОП ВО],
+      label-for(practice-type, [Тип практики в соответствии с ОПОП ВО]),
     )
   ])
 
@@ -113,7 +123,7 @@
   // --- Сведения об обучающемся ----------------------------------------
 
   field-line(
-    [#student-prefix],
+    [#prefix],
     author-rec.at("name", default: none),
     label: [Фамилия Имя Отчество],
   )
@@ -213,9 +223,14 @@
 
   // Поле «к исполнению принял» — подпись обучающегося.
   v(0.3em)
-  block(width: 100%, spacing: 0.3em)[
-    Задание в соответствии с рабочей программой практики
+  block(width: 100%, breakable: false, spacing: 0.55em)[
+    #grid(
+      columns: (auto, 1fr, auto),
+      column-gutter: 0.8em,
+      row-gutter: 3pt,
+      align: (left + bottom, center + bottom, left + bottom),
+      [Задание к исполнению принял], underlined-box(none), author-rec.at("name", default: none),
+      [], small-label[подпись, дата], [],
+    )
   ]
-  block(width: 100%, spacing: 0.3em)[к исполнению принял]
-  sign-line(none, author-rec.at("name", default: none))
 }

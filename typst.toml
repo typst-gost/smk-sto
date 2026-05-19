@@ -1,17 +1,18 @@
 [package]
 name = "smk-sto"
-version = "0.2.0"
+version = "0.3.0"
 entrypoint = "src/lib.typ"
 authors = ["tokKurumi"]
 license = "MIT"
-description = "Шаблон Typst для оформления учебной отчётности в МГУ им. Н.П. Огарёва: отчёты о лабораторных работах (СМК СТО 004–2020) и о практике (СМК СТО 014–2025)"
-keywords = ["smk-sto", "smk-sto-004", "smk-sto-014", "mordgu", "ogarev", "lab-report", "practice-report", "russian", "report"]
+description = "Шаблон Typst для оформления учебной отчётности в МГУ им. Н.П. Огарёва: отчёты о лабораторных работах (СМК СТО 004–2020) и о практике (СМК СТО 014–2025 + СМК СТО 006–2025)"
+keywords = ["smk-sto", "smk-sto-004", "smk-sto-006", "smk-sto-014", "mordgu", "ogarev", "lab-report", "practice-report", "russian", "report"]
 categories = ["report"]
 disciplines = ["education"]
 compiler = "0.14.0"
 exclude = [
     ".git", ".github",
-    "standard-labs.pdf", "standard-practice.pdf",
+    "scripts",
+    "standard-lab.pdf", "standard-practice.pdf", "standard-common.pdf",
     "AGENTS.md", "reference",
     "template/lab-example.typ", "template/practice-example.typ",
     "template/practice-main.typ",
@@ -20,3 +21,4 @@ exclude = [
 [template]
 path = "template"
 entrypoint = "lab-main.typ"
+

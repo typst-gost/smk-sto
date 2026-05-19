@@ -10,7 +10,10 @@ Typst-шаблон для оформления учебной отчётност
 - **отчёты о практике** — по **СМК СТО 014–2025** «Практика обучающихся
   высшего образования. Общие требования, правила оформления отчётности»
   (`practice-report` и сопутствующие функции с префиксом
-  `practice-report-`).
+  `practice-report-`). Общие требования к оформлению (списка
+  использованных источников, приложений, титульного листа и пр.)
+  СТО 014–2025 делегирует на **СМК СТО 006–2025** — действующий общий
+  стандарт оформления документов учебной деятельности.
 
 Шаблоны закрывают все общие требования стандартов: поля страницы, шрифт,
 межстрочный интервал, абзацный отступ, заголовки, перечисления, формулы,
@@ -20,7 +23,7 @@ Typst-шаблон для оформления учебной отчётност
 ## Быстрый старт — лабораторная работа
 
 ```typst
-#import "@preview/smk-sto:0.2.1": *
+#import "@preview/smk-sto:0.3.0": *
 
 #show: lab-report.with(
   institute: "Институт электроники и светотехники",
@@ -58,7 +61,7 @@ Typst-шаблон для оформления учебной отчётност
 ) <tab:results>
 
 = Обработка результатов
-$ R = U / I $ <eq:ohm>
+$ R = U / I, $ <eq:ohm>
 
 #where-block(
   ($U$, [напряжение, В]),
@@ -82,13 +85,14 @@ $ R = U / I $ <eq:ohm>
 ## Быстрый старт — отчёт о практике
 
 ```typst
-#import "@preview/smk-sto:0.2.1": *
+#import "@preview/smk-sto:0.3.0": *
 
 #show: practice-report.with(
   institute: "Институт электроники и светотехники",
   department: "Кафедра метрологии, стандартизации и сертификации",
   kind: "учебная",                          // вид практики
   practice-type: "ознакомительная",         // тип в соответствии с ОПОП ВО
+  gender: "male",                           // опционально: "male" / "female"
   author: (
     name: "И. И. Иванов",
     course: 1,
@@ -189,8 +193,12 @@ Typst (узлы и стрелки описываются кодом, без draw
 - Хелпер `where-block(...)` — пояснения к формулам с висячим отступом
   (СТО 8.4.2): «где» начинается с абзаца, переменные выровнены в столбик.
 - Приложения через `#show: appendix`: автоматическая буквенная
-  нумерация (А, Б, В, …), отдельная перенумерация рисунков, таблиц и
-  формул в каждом приложении.
+  нумерация (А, Б, В, …, без Ё, З, Й, О, Ч, Ъ, Ы, Ь по СТО 006–2025
+  п. 7.11.4), отдельная перенумерация рисунков, таблиц и формул
+  в каждом приложении. Заголовок — «ПРИЛОЖЕНИЕ N» прописными.
+  Статус приложения по умолчанию «обязательное»; переопределяется через
+  `#show: appendix.with(status: "справочное")` (допустимо «обязательное»,
+  «рекомендуемое», «справочное» или `none`).
 
 Лабораторные работы (СТО 004–2020):
 
@@ -309,6 +317,7 @@ Typst (узлы и стрелки описываются кодом, без draw
 #let common = (
   kind: "учебной",
   practice-type: "ознакомительная",
+  gender: "male",
   author: (name: "И. И. Иванов", course: 1, group: "101М"),
   direction: (code: "27.03.01", name: "Стандартизация и метрология"),
   profile: "Метрология и метрологическое обеспечение",
@@ -337,13 +346,15 @@ Typst (узлы и стрелки описываются кодом, без draw
 #practice-report-survey(
   kind: "учебной",
   practice-type: "ознакомительная",
+  gender: "male",
   // q1–q11 — поля по списку из Приложения Д.
-  answers: (q1: "да", q2: "РПП мне понятна", q7: 5, q10: "полностью удовлетворён(а)"),
+  answers: (q1: "да", q2: "РПП мне понятна", q7: 5, q10: "полностью удовлетворён"),
 )
 
 #practice-report-feedback(
   practice-name: "учебной ознакомительной практики",
   host-org: "ФГБОУ ВО «МГУ им. Н. П. Огарёва», кафедра ...",
+  gender: "male",
   author: "И. И. Иванов",
   direction: (code: "27.03.01", name: "Стандартизация и метрология"),
   profile: "...",
@@ -379,46 +390,33 @@ typst compile --root . template/practice-example.typ    # практика
 
 Чтобы протестировать пакет так, как его увидят пользователи после
 публикации в [Typst Universe](https://typst.app/universe) — кладём его
-в локальный кэш `@preview`. После этого `#import "@preview/smk-sto:0.2.1"`
+в локальный кэш `@preview`. После этого `#import "@preview/smk-sto:0.3.0"`
 работает из **любого** проекта на этой машине.
 
 Путь к кэшу зависит от ОС:
 
 | ОС       | Путь                                                              |
 |----------|-------------------------------------------------------------------|
-| Windows  | `%APPDATA%\typst\packages\preview\smk-sto\0.2.1\`             |
-| Linux    | `~/.local/share/typst/packages/preview/smk-sto/0.2.1/`        |
-| macOS    | `~/Library/Caches/typst/packages/preview/smk-sto/0.2.1/`      |
+| Windows  | `%APPDATA%\typst\packages\preview\smk-sto\0.3.0\`             |
+| Linux    | `~/.local/share/typst/packages/preview/smk-sto/0.3.0/`        |
+| macOS    | `~/Library/Caches/typst/packages/preview/smk-sto/0.3.0/`      |
+
+Установочные скрипты читают актуальную версию из файла `VERSION` и
+копируют пакет в соответствующую папку кэша.
 
 **Windows (PowerShell):**
 
 ```powershell
-$dest = "$env:APPDATA\typst\packages\preview\smk-sto\0.2.1"
-Remove-Item -Recurse -Force $dest -ErrorAction SilentlyContinue
-New-Item -ItemType Directory -Force -Path $dest | Out-Null
-robocopy . $dest /E `
-    /XF "standard-labs.pdf" "standard-practice.pdf" "AGENTS.md" `
-        "lab-example.typ" "practice-example.typ" "practice-main.typ" ".gitignore" `
-    /XD ".git" ".github" "temp-render" ".claude" reference | Out-Null
+./scripts/install-local.ps1
 ```
 
 **Linux / macOS:**
 
 ```bash
-DEST="${XDG_DATA_HOME:-$HOME/.local/share}/typst/packages/preview/smk-sto/0.2.1"
-rm -rf "$DEST"
-mkdir -p "$DEST"
-rsync -a \
-    --exclude='.git' --exclude='.github' --exclude='reference' \
-    --exclude='standard-labs.pdf' --exclude='standard-practice.pdf' \
-    --exclude='AGENTS.md' --exclude='temp-render' \
-    --exclude='template/lab-example.typ' \
-    --exclude='template/practice-example.typ' \
-    --exclude='template/practice-main.typ' \
-    ./ "$DEST/"
+bash scripts/install-local.sh
 ```
 
-Список исключений в обеих командах согласован с полем `exclude` в
+Список исключений в скриптах согласован с полем `exclude` в
 [`typst.toml`](typst.toml).
 
 ### Проверка из стороннего проекта
@@ -427,7 +425,7 @@ rsync -a \
 
 ```bash
 mkdir /tmp/check && cd /tmp/check
-echo '#import "@preview/smk-sto:0.2.1": *
+echo '#import "@preview/smk-sto:0.3.0": *
 #show: lab-report.with(work-number: 1, title: "Проверка",
   designation: (direction: "27.03.01", variant: "01"))
 = Раздел
@@ -450,10 +448,18 @@ MIT — см. файл [LICENSE](LICENSE).
 
 ## Источники
 
-- [СМК СТО 004–2020](standard-labs.pdf) — стандарт организации ФГБОУ ВО
+- [СМК СТО 004–2020](standard-lab.pdf) — стандарт организации ФГБОУ ВО
   «МГУ им. Н.П. Огарёва» «Правила оформления отчётов о лабораторных
   работах», утверждённый приказом № 514 от 15.09.2020 г.
 - [СМК СТО 014–2025](standard-practice.pdf) — стандарт организации
   ФГБОУ ВО «МГУ им. Н.П. Огарёва» «Практика обучающихся высшего
   образования. Общие требования, правила оформления отчётности»,
-  утверждённый приказом № 1532 от 30.12.2025 г.
+  утверждённый приказом № 1532 от 30.12.2025 г. Ссылается на СТО 006
+  в части общих требований к оформлению (титульный лист, задание,
+  список использованных источников, приложения).
+- [СМК СТО 006–2025](standard-common.pdf) — стандарт организации
+  ФГБОУ ВО «МГУ им. Н.П. Огарёва» «Общие требования к построению,
+  изложению и оформлению документов учебной деятельности»,
+  утверждённый приказом № 1529 от 30.12.2025 г. Базовый источник
+  общих требований оформления для отчётов о практике, курсовых, ВКР.
+

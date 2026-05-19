@@ -41,6 +41,9 @@
   department: none,
   kind: none,
   practice-type: none,
+  // Гендер обучающегося («male» / «female» / `none`) — влияет на
+  // словоформы (см. `student-word` в practice/form-helpers.typ).
+  gender: none,
   author: none,
   direction: none,
   profile: none,
@@ -79,6 +82,7 @@
       department: department,
       kind: kind,
       practice-type: practice-type,
+      gender: gender,
       author: author,
       direction: direction,
       profile: profile,

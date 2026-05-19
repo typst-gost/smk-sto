@@ -6,24 +6,20 @@
 //
 // Подключение:
 //
-//   #import "@preview/smk-sto:0.2.0": *
+//   #import "@preview/smk-sto:0.3.0": *
 //
 //   #show: lab-report.with(...)       // для лабораторной работы
 //   // или
 //   #show: practice-report.with(...)  // для отчёта о практике
 
 #import "constants.typ": (
-  default-font, default-text-size, default-small-size,
-  default-indent, default-margin,
-  default-okpo, default-city, default-ministry, default-organization,
+  default-city, default-font, default-indent, default-margin, default-ministry, default-okpo, default-organization,
+  default-small-size, default-text-size,
 )
 #import "style.typ": smk-style
-#import "utils.typ": (
-  enum-letter, sign-field, where-block,
-  table-label, table-continuation, nbsp-name,
-)
+#import "utils.typ": enum-letter, nbsp-name, sign-field, table-continuation, table-label, where-block
 #import "appendix.typ": appendix
-#import "diagram.typ": diagram, node, edge
+#import "diagram.typ": diagram, edge, node
 
 // Лабораторные работы (СМК СТО 004–2020).
 #import "lab/report.typ": lab-report
@@ -39,3 +35,4 @@
 #import "practice/diary.typ": practice-report-diary
 #import "practice/survey.typ": practice-report-survey
 #import "practice/feedback.typ": practice-report-feedback
+
