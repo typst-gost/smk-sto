@@ -23,7 +23,7 @@ Typst-шаблон для оформления учебной отчётност
 ## Быстрый старт — лабораторная работа
 
 ```typst
-#import "@preview/smk-sto:0.3.2": *
+#import "@preview/smk-sto:0.4.0": *
 
 #show: lab-report
 
@@ -87,7 +87,7 @@ $ R = U / I, $ <eq:ohm>
 ## Быстрый старт — отчёт о практике
 
 ```typst
-#import "@preview/smk-sto:0.3.2": *
+#import "@preview/smk-sto:0.4.0": *
 
 #show: practice-report
 
@@ -409,7 +409,7 @@ typst compile --root . template/practice-example.typ    # практика
 
 Чтобы протестировать пакет так, как его увидят пользователи после
 публикации в [Typst Universe](https://typst.app/universe) — кладём его
-в локальный кэш `@preview`. После этого `#import "@preview/smk-sto:0.3.2"`
+в локальный кэш `@preview`. После этого `#import "@preview/smk-sto:0.4.0"`
 работает из **любого** проекта на этой машине.
 
 Путь к кэшу зависит от ОС:
@@ -417,8 +417,8 @@ typst compile --root . template/practice-example.typ    # практика
 | ОС       | Путь                                                              |
 |----------|-------------------------------------------------------------------|
 | Windows  | `%APPDATA%\typst\packages\preview\smk-sto\0.3.2\`             |
-| Linux    | `~/.local/share/typst/packages/preview/smk-sto/0.3.2/`        |
-| macOS    | `~/Library/Caches/typst/packages/preview/smk-sto/0.3.2/`      |
+| Linux    | `~/.local/share/typst/packages/preview/smk-sto/0.4.0/`        |
+| macOS    | `~/Library/Caches/typst/packages/preview/smk-sto/0.4.0/`      |
 
 Установочные скрипты читают актуальную версию из файла `VERSION` и
 копируют пакет в соответствующую папку кэша.
@@ -444,7 +444,7 @@ bash scripts/install-local.sh
 
 ```bash
 mkdir /tmp/check && cd /tmp/check
-echo '#import "@preview/smk-sto:0.3.2": *
+echo '#import "@preview/smk-sto:0.4.0": *
 #show: lab-report
 #lab-report-title-page(work-number: 1, title: "Проверка",
   designation: (direction: "27.03.01", variant: "01"))
