@@ -110,6 +110,68 @@ the standard:
 
 Only override these if the user explicitly asks.
 
+## Title page behaviour
+
+### Skipping the title page
+
+Pass `hide-title: true` to either show rule to omit the title page while
+keeping the document style (margins, fonts, heading rules, captions, etc.):
+
+```typst
+#show: lab-report.with(
+  hide-title: true,
+  institute: "...",
+  ...
+)
+```
+
+```typst
+#show: practice-report.with(
+  hide-title: true,
+  institute: "...",
+  ...
+)
+```
+
+`smk-style` is still applied — only the title page content and its
+`pagebreak` are suppressed. Useful for drafts, or when the title is
+maintained in a separate file.
+
+### Optional fields — missing values are silently skipped
+
+Fields left as `none` (i.e. not passed to the initializer) are **not**
+rendered at all — no placeholder line, no blank underline, nothing. The
+surrounding spacing adjusts automatically.
+
+| Report       | Parameter        | Line omitted when `none`                           |
+|--------------|------------------|----------------------------------------------------|
+| Lab          | `supervisor`     | «Руководитель работы» block + signature row        |
+| Lab          | `institute`      | Institute line in the university header            |
+| Lab          | `department`     | Department line in the university header           |
+| Lab          | `discipline`     | «по дисциплине: …» line                            |
+| Lab          | `title`          | Work title line                                    |
+| Lab          | `designation`    | «Обозначение лабораторной работы …» line           |
+| Practice     | `direction`      | «Направление подготовки / Специальность» line      |
+| Practice     | `profile`        | «Профиль / Специализация» line                     |
+| Practice     | `location`       | «Место прохождения практики» line                  |
+| Practice     | `period`         | «Срок прохождения практики» line                   |
+| Practice     | `supervisor-uni` | «Руководитель практики от Университета» block      |
+| Practice     | `supervisor-org` | «Руководитель практики от профильной организации» block |
+| Practice     | `institute`      | Institute line in the university header            |
+| Practice     | `department`     | Department line in the university header           |
+| Practice     | `designation`    | «Обозначение отчёта: …» line                       |
+
+Fields that are **always rendered** regardless (they are structurally
+required by the form):
+
+- Ministry (`ministry`) and organization (`organization`) — top header.
+- «ОТЧЁТ о лабораторной работе» / «ОТЧЁТ по … практике» document-type
+  block.
+- «Автор отчёта» signature row.
+- «Отчёт защищён … / Оценка …» defence block on the practice title page
+  (always a hand-fill field per СТО 014 п. 5.5).
+- City and year footer.
+
 ## API surface
 
 Imported with `#import "@preview/smk-sto:0.3.1": *`:

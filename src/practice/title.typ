@@ -191,7 +191,7 @@
       if type(course) == int { str(course) } else { course }
     } else { "___" }
     let group-str = if group != none { group } else { "___" }
-    block(spacing: 0.65em)[#prefix #course-str курса #group-str группы]
+    align(left, block(spacing: 0.65em)[#prefix #course-str курса #group-str группы])
   }
 
   v(0.4em)
@@ -199,25 +199,33 @@
   // Левый блок с полями формы.
   set align(left)
 
-  field-line(
-    [Направление подготовки / Специальность],
-    dir-str,
-    label: [код, наименование направления подготовки/специальности],
-  )
+  if dir-str != none {
+    field-line(
+      [Направление подготовки / Специальность],
+      dir-str,
+      label: [код, наименование направления подготовки/специальности],
+    )
+  }
 
-  field-line([Профиль / Специализация], profile)
+  if profile != none {
+    field-line([Профиль / Специализация], profile)
+  }
 
-  field-line(
-    [Место прохождения практики],
-    location,
-    label: [населённый пункт, профильная организация, структурное подразделение],
-  )
+  if location != none {
+    field-line(
+      [Место прохождения практики],
+      location,
+      label: [населённый пункт, профильная организация, структурное подразделение],
+    )
+  }
 
-  field-line(
-    [Срок прохождения практики],
-    period-str,
-    label: [начало (дата) – окончание (дата)],
-  )
+  if period-str != none {
+    field-line(
+      [Срок прохождения практики],
+      period-str,
+      label: [начало (дата) – окончание (дата)],
+    )
+  }
 
   v(0.2em)
 
@@ -240,15 +248,17 @@
   }
 
   // Руководитель от Университета.
-  v(0.4em)
-  let uni-org = sup-uni.at("org", default: none)
-  let uni-org-part = if uni-org != none { uni-org } else { [ФГБОУ ВО «МГУ им. Н.П. Огарёва»] }
-  block(width: 100%, spacing: 0.3em)[Руководитель практики]
-  block(width: 100%, spacing: 0.3em)[от #uni-org-part,]
-  sign-line(
-    sup-uni.at("position", default: none),
-    sup-uni.at("name", default: none),
-  )
+  if supervisor-uni != none {
+    v(0.4em)
+    let uni-org = sup-uni.at("org", default: none)
+    let uni-org-part = if uni-org != none { uni-org } else { [ФГБОУ ВО «МГУ им. Н.П. Огарёва»] }
+    block(width: 100%, spacing: 0.3em)[Руководитель практики]
+    block(width: 100%, spacing: 0.3em)[от #uni-org-part,]
+    sign-line(
+      sup-uni.at("position", default: none),
+      sup-uni.at("name", default: none),
+    )
+  }
 
   // Поле «Отчёт защищён … дата + Оценка …» — заполняется рукописно после
   // защиты (СТО 014–2025 п. 5.5). Подчёркивание оставляем всегда, даже

@@ -144,12 +144,14 @@
     block(width: 100%)[Направление подготовки #direction]
   }
 
-  v(0.7em)
-  block(width: 100%)[Руководитель работы]
-  sign-field(
-    sup-rec.at("position", default: none),
-    sup-rec.at("name", default: none),
-  )
+  if supervisor != none {
+    v(0.7em)
+    block(width: 100%)[Руководитель работы]
+    sign-field(
+      sup-rec.at("position", default: none),
+      sup-rec.at("name", default: none),
+    )
+  }
 
   v(1fr)
 
