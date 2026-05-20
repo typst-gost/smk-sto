@@ -2,7 +2,9 @@
 
 #import "@preview/smk-sto:0.3.2": *
 
-#show: practice-report.with(
+#show: practice-report
+
+#practice-report-title-page(
   // Министерство и название университета подставлены по умолчанию из СТО —
   // переопределяйте только при необходимости.
   institute: "Институт электроники и светотехники",
@@ -75,4 +77,3 @@ $ R = U / I, $ <eq:ohm>
   style: "gost-r-7-0-100-2018-numeric.csl",
   title: [Список использованных источников],
 )
-

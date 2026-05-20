@@ -292,4 +292,6 @@
 
   set align(center)
   block[#city #year]
+
+  pagebreak(weak: true)
 }

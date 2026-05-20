@@ -3,7 +3,9 @@
 
 #import "../src/lib.typ": *
 
-#show: lab-report.with(
+#show: lab-report
+
+#lab-report-title-page(
   institute: "Институт электроники и светотехники",
   department: "Кафедра метрологии, стандартизации и сертификации",
   work-number: 1,

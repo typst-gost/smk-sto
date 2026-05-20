@@ -34,7 +34,9 @@ A minimal `report.typ`:
 ```typst
 #import "@preview/smk-sto:0.3.2": *
 
-#show: lab-report.with(
+#show: lab-report
+
+#lab-report-title-page(
   institute: "Институт электроники и светотехники",
   department: "Кафедра метрологии, стандартизации и сертификации",
   work-number: 1,
@@ -60,7 +62,9 @@ A minimal `report.typ`:
 ```typst
 #import "@preview/smk-sto:0.3.2": *
 
-#show: practice-report.with(
+#show: practice-report
+
+#practice-report-title-page(
   institute: "Институт электроники и светотехники",
   department: "Кафедра метрологии, стандартизации и сертификации",
   kind: "учебная",                          // вид: «учебная» / «производственная»
@@ -112,30 +116,17 @@ Only override these if the user explicitly asks.
 
 ## Title page behaviour
 
-### Skipping the title page
-
-Pass `hide-title: true` to either show rule to omit the title page while
-keeping the document style (margins, fonts, heading rules, captions, etc.):
+`lab-report` / `practice-report` handle **only** document styling.
+The title page is a separate explicit call:
 
 ```typst
-#show: lab-report.with(
-  hide-title: true,
-  institute: "...",
-  ...
-)
+#show: lab-report          // styles only
+#lab-report-title-page(...)  // renders the cover page + pagebreak
 ```
 
-```typst
-#show: practice-report.with(
-  hide-title: true,
-  institute: "...",
-  ...
-)
-```
-
-`smk-style` is still applied — only the title page content and its
-`pagebreak` are suppressed. Useful for drafts, or when the title is
-maintained in a separate file.
+To skip the title page entirely, simply omit the `#lab-report-title-page(...)`
+call. The style initialization still runs — margins, fonts, headings, etc.
+are all active.
 
 ### Optional fields — missing values are silently skipped
 
@@ -178,18 +169,21 @@ Imported with `#import "@preview/smk-sto:0.3.2": *`:
 
 **Lab reports (СТО 004–2020):**
 
-- `lab-report(..., body)` — main show rule. Use as `#show: lab-report.with(...)`.
-- `lab-report-title-page(...)` — standalone renderer for the title page
-  (Приложение А). Use only if you need to detach the title from
-  `lab-report`; normally call `lab-report` and the title comes for free.
+- `lab-report(..., body)` — show rule. Applies document styles only
+  (margins, fonts, headings, captions). Use as `#show: lab-report` or
+  `#show: lab-report.with(text-size: ..., ...)` for style overrides.
+- `lab-report-title-page(...)` — renders the title page (Приложение А)
+  and emits a `pagebreak`. Call explicitly after `#show: lab-report`.
+  Omit the call entirely to produce a document without a title page.
 - `lab-report-designation(...)` — formats «ЛР–02069964–DDD–NN–YY» from
   `(direction: ..., variant: ...)`.
 
 **Practice reports (СТО 014–2025):**
 
-- `practice-report(..., body)` — main show rule. Use as `#show: practice-report.with(...)`.
-- `practice-report-title-page(...)` — standalone renderer for the title
-  page (Приложение В).
+- `practice-report(..., body)` — show rule. Applies document styles only.
+  Use as `#show: practice-report` or with style overrides via `.with(...)`.
+- `practice-report-title-page(...)` — renders the title page (Приложение В)
+  and emits a `pagebreak`. Call explicitly after `#show: practice-report`.
 - `practice-report-designation(...)` — formats
   «ОП–02069964–В–DD.NN.NN–NN–YYYY» from `(kind: "У", direction: "...",
   variant: "...")`.
@@ -450,19 +444,20 @@ Available appendix letters: А, Б, В, Г, Д, Е, Ж, И, К, Л, М, Н, П, 
 
 ## Things to avoid
 
-- **Do not** mix the two families. A lab report uses `lab-report` (with
-  `work-number`, `discipline`, `title`); a practice report uses
-  `practice-report` (with `kind`, `practice-type`, `period`,
-  `direction`, `profile`, `location`). Sending lab-specific fields to
-  `practice-report` (or vice versa) is a usage error.
+- **Do not** mix the two families. `lab-report-title-page` takes
+  `work-number`, `discipline`, `title`; `practice-report-title-page`
+  takes `kind`, `practice-type`, `period`, `direction`, `profile`,
+  `location`. Sending lab-specific fields to the practice title page
+  (or vice versa) is a usage error.
 - **Do not** add manual `#set page(...)`, `#set text(...)`, `#set par(...)`
   unless the user asks for a specific deviation. The template's defaults
   are the standard.
 - **Do not** number structural sections (Введение, Заключение, …) —
   they are by definition non-numbered. Tag them with `<s>` and the
   template handles the rest.
-- **Do not** add the title page manually — `lab-report` / `practice-report`
-  emit it.
+- **Do not** call `lab-report-title-page` / `practice-report-title-page`
+  before `#show: lab-report` / `#show: practice-report` — the title page
+  functions rely on the styles set by the show rule.
 - **Do not** use em dash «—» for «Рисунок N – ...» / «Таблица N – ...»
   separators — the template already uses en dash «–» per the standard.
   In running prose either dash is fine; match what the user already
@@ -480,7 +475,7 @@ Available appendix letters: А, Б, В, Г, Д, Е, Ж, И, К, Л, М, Н, П, 
 
 A complete report has, in order:
 
-1. Title page (auto, from `lab-report.with(...)`)
+1. Title page (`#lab-report-title-page(...)`)
 2. `= Цель работы` (or «Цель или задачи работы»)
 3. `= Программа и методика эксперимента`
 4. `= Результаты измерений (наблюдений)`
@@ -497,7 +492,7 @@ A complete report has, in order:
 
 A complete report has:
 
-1. Title page (auto, from `practice-report.with(...)`)
+1. Title page (`#practice-report-title-page(...)`)
 2. Main part — chapters covering the work done per the practice task
 3. `= Заключение <s>` — summary of results
 4. Optional `#bibliography(...)` titled «Список использованных источников»

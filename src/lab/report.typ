@@ -3,14 +3,14 @@
 #import "../constants.typ": (
   default-font, default-text-size, default-small-size,
   default-indent, default-margin,
-  default-city, default-ministry, default-organization,
 )
 #import "../style.typ": smk-style
-#import "title.typ": lab-report-title-page
 
 // Применяется так:
 //
-//   #show: lab-report.with(
+//   #show: lab-report
+//
+//   #lab-report-title-page(
 //     work-number: 1,
 //     title: "Измерение в цепях постоянного тока",
 //     discipline: "Поверка средств измерений электрических величин",
@@ -27,26 +27,12 @@
 //   ...
 //
 #let lab-report(
-  // Контент титульного листа.
-  ministry: default-ministry,
-  organization: default-organization,
-  institute: none,
-  department: none,
-  work-number: none,
-  discipline: none,
-  title: none,
-  author: none,
-  supervisor: none,
-  designation: none,
-  city: default-city,
-  year: auto,
   // Параметры оформления.
   text-size: default-text-size,
   small-size: default-small-size,
   indent: default-indent,
   margin: default-margin,
   font: default-font,
-  hide-title: false,
   add-pagebreaks: true,
   body,
 ) = {
@@ -58,24 +44,6 @@
     font: font,
     add-pagebreaks: add-pagebreaks,
   )
-
-  if not hide-title {
-    lab-report-title-page(
-      ministry: ministry,
-      organization: organization,
-      institute: institute,
-      department: department,
-      work-number: work-number,
-      discipline: discipline,
-      title: title,
-      author: author,
-      supervisor: supervisor,
-      designation: designation,
-      city: city,
-      year: year,
-    )
-    pagebreak(weak: true)
-  }
 
   body
 }

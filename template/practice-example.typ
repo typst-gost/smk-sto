@@ -3,7 +3,9 @@
 
 #import "../src/lib.typ": *
 
-#show: practice-report.with(
+#show: practice-report
+
+#practice-report-title-page(
   institute: "Институт электроники и светотехники",
   department: "Кафедра метрологии, стандартизации и сертификации",
   kind: "учебной",
