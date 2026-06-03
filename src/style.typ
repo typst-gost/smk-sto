@@ -45,7 +45,7 @@
     justify: true,
     first-line-indent: (amount: indent, all: true),
     leading: default-leading,
-    spacing: default-spacing,
+    spacing: default-leading,
   )
 
   // Списки по СТО 8.1.5: маркер «–», нумерация «1)», абзацный отступ.
