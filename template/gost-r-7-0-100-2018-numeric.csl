@@ -266,7 +266,6 @@
                 <text macro="number-of-volumes"/>
               </group>
               <text macro="volume"/>
-              <text variable="title-short"/>
             </group>
             <group delimiter=" ">
               <text macro="second-position-creators"/>
@@ -320,7 +319,6 @@
           <text macro="publisher"/>
           <text macro="volume"/>
           <text macro="collection-number"/>
-          <text variable="title-short"/>
           <text macro="page"/>
         </group>
       </else-if>
@@ -341,7 +339,6 @@
           </group>
           <text macro="year-date"/>
           <text macro="volume"/>
-          <text variable="title-short"/>
           <text variable="issue" prefix="№ "/>
           <text macro="page"/>
         </group>
@@ -358,7 +355,6 @@
             </group>
             <text variable="container-title"/>
           </group>
-          <text variable="title-short"/>
           <text macro="year-date"/>
           <text macro="day-month"/>
           <text macro="page"/>
@@ -446,7 +442,6 @@
                 <text macro="number-of-volumes"/>
               </group>
               <text macro="volume"/>
-              <text variable="title-short"/>
             </group>
             <group delimiter=" ">
               <text macro="second-position-creators"/>
@@ -455,8 +450,8 @@
           </group>
           <text macro="publisher"/>
           <text macro="collection-number"/>
-          <text macro="pages-or-volumes"/>
         </group>
+        <text term="opus"/>
       </else>
     </choose>
   </macro>
