@@ -80,6 +80,10 @@
   set text(size: 14pt, hyphenate: false)
   set align(center)
 
+  // Титульный лист всегда страница 1; smk-style стартует счётчик с 2,
+  // поэтому здесь явно откатываем обратно на 1.
+  counter(page).update(1)
+
   // Шапка университета
   block(spacing: 0.65em)[#ministry]
   v(0.7em)

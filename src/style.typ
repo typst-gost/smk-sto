@@ -28,8 +28,14 @@
   set page(
     paper: "a4",
     margin: margin,
-    numbering: "1",
-    number-align: center + bottom,
+    footer: context {
+      let p = counter(page).get().first()
+      if p == 1 and hide-title-page-number {
+        []
+      } else {
+        align(center)[#counter(page).display("1")]
+      }
+    },
   )
 
   // Переносы в основном тексте разрешены (СТО 014–2025 п. 5.7,
@@ -176,15 +182,10 @@
   // Ссылки внутри документа.
   set ref(supplement: none)
 
-  // Скрыть номер на первой странице (титульный лист).
-  set page(footer: context {
-    let p = counter(page).get().first()
-    if p == 1 and hide-title-page-number {
-      []
-    } else {
-      align(center)[#counter(page).display("1")]
-    }
-  })
-
+  // Титульный лист всегда считается страницей 1 — даже если он не
+  // вшит в документ. Поэтому первая страница контента начинается с 2.
+  // Функция *-title-page откатывает счётчик обратно на 1, обеспечивая
+  // отображение «1» (скрытого) именно на титуле.
+  counter(page).update(2)
   body
 }
