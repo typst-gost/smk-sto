@@ -1,6 +1,6 @@
 // Стартовый шаблон отчёта о лабораторной работе по СМК СТО 004–2020.
 
-#import "@preview/smk-sto:0.4.1": *
+#import "@preview/smk-sto:0.4.2": *
 
 #show: lab-report
 

@@ -1,6 +1,6 @@
 // Стартовый шаблон отчёта о практике по СМК СТО 014–2025.
 
-#import "@preview/smk-sto:0.4.1": *
+#import "@preview/smk-sto:0.4.2": *
 
 #show: practice-report
 
