@@ -158,6 +158,10 @@
   show figure.where(kind: image): set figure(supplement: [Рисунок])
   show figure.where(kind: image): set figure.caption(position: bottom)
   show figure.where(kind: image): set align(center)
+  // Между рисунком и подписью, а также между подписью и следующим текстом
+  // — всегда одна пустая строка (отступ задаётся на самой подписи).
+  show figure.where(kind: image): set figure(gap: default-spacing)
+  show figure.caption.where(kind: image): it => [#it #v(default-spacing)]
 
   // Таблицы: подпись «Таблица N — ...» слева, сверху, с разрядкой буквы.
   show figure.where(kind: table): set figure.caption(position: top)
