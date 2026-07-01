@@ -237,7 +237,9 @@ rules will only fight the template:
   допускаются»; СТО 014 5.7 allows hyphenation outside headings — the
   template keeps the stricter labs behavior for both).
 - Headings: numbered `1`, `1.1`, `1.1.1`, bold, indented by 1.25 cm,
-  followed by one blank line; level-1 headings start a new page.
+  followed by one blank line; level-1 headings start a new page. Bold is
+  applied **only** here (and to structural-element headings) — never in
+  body text (СТО 006–2025 п. 8.1.3). Emphasize body fragments with italic.
 - Structural headings — marked with the `<s>` label, centered, uppercased,
   un-numbered, do not advance the chapter counter.
   Auto-generated unnumbered headings (`#outline()`, `#bibliography(title: ...)`)
@@ -284,6 +286,21 @@ for these headings, so numbered chapters around them stay sequential.
 `#outline()` and `#bibliography(title: ...)` produce their own
 unnumbered level-1 heading, which is auto-styled the same way — you do
 not need to add `<s>` to them.
+
+### Emphasis (italic only — never bold)
+
+Bold in the body is **forbidden** by СТО 006–2025 п. 8.1.3: «Полужирный
+шрифт применяют только для заголовков разделов и подразделов, заголовков
+структурных элементов». The weight is reserved for headings, which the
+template already sets automatically. When you need to highlight a term or
+phrase in running text, use *italic*:
+
+```typst
+Особое внимание уделяется _классу точности_ измерительного прибора.
+```
+
+Use `_…_` (or `#emph[…]`). Never use `*…*` / `#strong[…]` to emphasize
+body text, table cells, captions or list items.
 
 ### Lists, enums, lettered items
 
@@ -452,6 +469,11 @@ Available appendix letters: А, Б, В, Г, Д, Е, Ж, И, К, Л, М, Н, П, 
 - **Do not** add manual `#set page(...)`, `#set text(...)`, `#set par(...)`
   unless the user asks for a specific deviation. The template's defaults
   are the standard.
+- **Do not** use bold (`*…*`, `#strong[…]`) anywhere in the body — running
+  text, list items, table cells or captions. Per **СТО 006–2025 п. 8.1.3**
+  bold is reserved **exclusively** for section/subsection headings and the
+  headings of structural elements, all of which the template already sets
+  bold for you. To emphasize a fragment, use *italic* (`_…_` / `#emph[…]`).
 - **Do not** number structural sections (Введение, Заключение, …) —
   they are by definition non-numbered. Tag them with `<s>` and the
   template handles the rest.
