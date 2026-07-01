@@ -347,6 +347,19 @@ body text, table cells, captions or list items.
 Сведения сведены в таблицу @tab:results.
 ```
 
+> **Keep every table on a single page.** The template does **not** yet
+> generate the «Продолжение таблицы N» / «Окончание таблицы N» continuation
+> labels (and repeated column-number head) that СТО 006–2025 п. 8.7.8
+> requires when a table breaks across pages. A table that spills onto the
+> next page will break *silently* and violate the standard. So whenever you
+> add or edit a table, **check the compiled PDF** and make sure it fits one
+> page. If it does not, shorten it (fewer rows, more concise cells), split
+> it into several smaller self-contained tables, or move it to an appendix.
+> Prefer many small tables over one large one. If a large table genuinely
+> cannot fit a single page, split it manually and put `table-continuation(N)`
+> above each following part (`kind: "Окончание"` over the last one) — the
+> template will not add these labels for you.
+
 ### Formulas
 
 ```typst
@@ -474,6 +487,12 @@ Available appendix letters: А, Б, В, Г, Д, Е, Ж, И, К, Л, М, Н, П, 
   bold is reserved **exclusively** for section/subsection headings and the
   headings of structural elements, all of which the template already sets
   bold for you. To emphasize a fragment, use *italic* (`_…_` / `#emph[…]`).
+- **Do not** let a table break across pages. The template does not emit
+  the «Продолжение/Окончание таблицы N» labels required by СТО 006–2025
+  п. 8.7.8 on page breaks, so a split table silently violates the standard.
+  Keep tables small enough to fit one page (split them or move to an
+  appendix) and verify in the PDF; if a break is truly unavoidable, split
+  the table manually and label each part with `table-continuation(N)`.
 - **Do not** number structural sections (Введение, Заключение, …) —
   they are by definition non-numbered. Tag them with `<s>` and the
   template handles the rest.
