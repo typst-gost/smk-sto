@@ -188,18 +188,25 @@
     ]
   }
 
-  // Рисунки. По СТО разделитель — тире «–» с пробелами.
+  // Рисунки и таблицы — единый «объект»: подпись приклеена к самому
+  // рисунку/таблице, а сверху и снизу от объекта — одна пустая строка.
+  // Внешний отступ объекта задаётся межблочным интервалом (block spacing),
+  // а НЕ жёстким `v()`: у соседних блоков такой интервал не складывается, а
+  // схлопывается до большего значения. Поэтому, например, отступ под рисунком
+  // не суммируется с отступом следующего за ним подраздела.
+  show figure: set block(spacing: default-spacing)
   set figure.caption(separator: [ – ])
   show figure.caption: set par(first-line-indent: 0pt, justify: false)
-  show figure.where(kind: image): set figure(supplement: [Рисунок])
+
+  // Рисунок: подпись снизу, по центру; между рисунком и подписью — одна
+  // пустая строка (внутренний интервал `gap`).
+  show figure.where(kind: image): set figure(supplement: [Рисунок], gap: default-spacing)
   show figure.where(kind: image): set figure.caption(position: bottom)
   show figure.where(kind: image): set align(center)
-  // Между рисунком и подписью, а также между подписью и следующим текстом
-  // — всегда одна пустая строка (отступ задаётся на самой подписи).
-  show figure.where(kind: image): set figure(gap: default-spacing)
-  show figure.caption.where(kind: image): it => [#it #v(default-spacing)]
 
   // Таблицы: подпись «Таблица N — ...» слева, сверху, с разрядкой буквы.
+  // Подпись приклеена к таблице — внутренний интервал уменьшен.
+  show figure.where(kind: table): set figure(gap: 0.5em)
   show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: table): set align(left)
   show figure.where(kind: table): set block(breakable: true)
