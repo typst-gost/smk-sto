@@ -61,6 +61,22 @@
     body-indent: 0.5em,
     spacing: default-leading,
   )
+  // Маркированные списки («-») — как и нумерованные (см. ниже): отступ красной
+  // строки, а не выступ. Первая строка пункта (с маркером) отступается на
+  // абзацный отступ, перенесённые строки начинаются от левого края.
+  show list: it => {
+    let m = it.marker
+    let marker = if type(m) == function { m(0) } else if type(m) == array { m.at(0, default: [–]) } else { m }
+    for item in it.children {
+      block(
+        spacing: it.spacing,
+        par(
+          first-line-indent: (amount: it.indent, all: true),
+          [#marker#h(it.body-indent)#item.body],
+        ),
+      )
+    }
+  }
   set enum(
     indent: indent,
     body-indent: 0.5em,
@@ -68,6 +84,26 @@
     numbering: "1)",
     full: true,
   )
+  // Нумерованные списки («+») оформляются с отступом красной строки, а не с
+  // выступом: первая строка пункта (вместе с номером) отступается на абзацный
+  // отступ, а перенесённые строки начинаются от левого края — как в обычном
+  // абзаце. Стандартный enum Typst выравнивает перенос под текстом (выступ),
+  // поэтому перестраиваем каждый пункт как абзац с first-line-indent.
+  show enum: it => {
+    let n = if it.start == auto { 1 } else { it.start }
+    for item in it.children {
+      let explicit = item.at("number", default: auto)
+      let num = if explicit == auto { n } else { explicit }
+      n = num + 1
+      block(
+        spacing: it.spacing,
+        par(
+          first-line-indent: (amount: it.indent, all: true),
+          [#numbering(it.numbering, num)#h(it.body-indent)#item.body],
+        ),
+      )
+    }
+  }
 
   // Заголовки.
   set heading(numbering: "1.1 ", hanging-indent: 0pt)
